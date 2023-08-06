@@ -112,12 +112,6 @@ namespace CherryTale_AssetDecDL
 
             using (WebClient wc = new WebClient())
             {
-                //Test code
-                /*byte[] data = await wc.DownloadDataTaskAsync(downPath);
-                if (CheckSign(data))
-                    data = ChangeVersion(data);
-                    data = ChangeIdx(data);
-                */
                 try
                 {
                     // Don't use DownloadFileTaskAsync, if 404 it will create a empty file, use DownloadDataTaskAsync instead.
