@@ -101,9 +101,7 @@ namespace CherryTale_AssetDecDL
         public async Task<Task> DownLoadFile(string downPath, string savePath, bool overWrite)
         {
             if (!Directory.Exists(Path.GetDirectoryName(savePath)))
-            {
                 Directory.CreateDirectory(Path.GetDirectoryName(savePath));
-            }
             
             if (File.Exists(savePath) && overWrite == false)
                 return Task.FromResult(0);
@@ -117,7 +115,7 @@ namespace CherryTale_AssetDecDL
                     // Don't use DownloadFileTaskAsync, if 404 it will create a empty file, use DownloadDataTaskAsync instead.
                     byte[] data = await wc.DownloadDataTaskAsync(downPath);
                     if (CheckSign(data))
-                        data = ChangeIdx(ChangeVersion(data));
+                        data = DecryptUnityAsset.ChangeIdx(DecryptUnityAsset.ChangeVersion(data));
                     File.WriteAllBytes(savePath, data);
                     
                 }
@@ -136,27 +134,6 @@ namespace CherryTale_AssetDecDL
             return Task.FromResult(0);
         }
 
-        public byte[] ChangeVersion(byte[] data)
-        {
-            // 2018.3.5f1.
-            byte[] verion_fake = { 0x32, 0x30, 0x31, 0x38, 0x2E, 0x33, 0x2E, 0x35, 0x66, 0x31, 0x00 };
-            // 2020.3.41f1
-            byte[] verion = { 0x32, 0x30, 0x32, 0x30, 0x2E, 0x33, 0x2E, 0x34, 0x31, 0x66, 0x31 };
-
-            long data_size = data.Length;
-            int datahead_size = 0x300;
-            byte[] datahead = new byte[datahead_size];
-            Array.Copy(data, datahead, datahead_size);
-
-            ArrayReplaceAll(datahead, verion_fake, verion);
-
-            byte[] newdata = new byte[data_size];
-            Array.Copy(datahead, 0, newdata, 0, datahead_size);
-            Array.Copy(data, datahead_size, newdata, datahead_size, data_size - datahead_size);
-
-            return newdata;
-        }
-
         public bool CheckSign(byte[] data)
         {
             string signed = "UnityFS";
@@ -170,58 +147,6 @@ namespace CherryTale_AssetDecDL
                     return true;
             }
             return false;
-        }
-
-        public void ArrayReplaceAll(byte[] source, byte[] oldBytes, byte[] newBytes)
-        {
-            for (int i = 0; i < source.Length - oldBytes.Length + 1; i++)
-            {
-                bool match = true;
-                for (int j = 0; j < oldBytes.Length; j++)
-                {
-                    if (source[i + j] != oldBytes[j])
-                    {
-                        match = false;
-                        break;
-                    }
-                }
-                if (match)
-                {
-                    Array.Copy(newBytes, 0, source, i, newBytes.Length);
-                }
-            }
-        }
-
-        public byte[] ChangeIdx(byte[] iFileData)
-        {
-            int v4 = 0, v8, v11, v12, v19;
-            byte v21;
-            int[] v7;
-            if (iFileData.Length > 0x270C)
-                v7 = new int[3] { 0x3FB, 0xD99, 0x197C };
-            else
-                v7 = new int[3] { 0x3FB, 0xC68, 0xD99 };
-
-            while (true)
-            {
-                v11 = v7.Length;
-                if (v4 >= v11)
-                    break;
-
-                // v9 = v7->m_Items; v12 = *(_DWORD *)&v9[4 * v4];
-                v12 = v7[v4];
-                v8 = iFileData.Length;
-                if (v8 > v12)
-                {
-                    v21 = iFileData[v12];
-                    iFileData[v12] = iFileData[v8 - v12];
-                    v19 = iFileData.Length - v12;
-                    iFileData[v19] = v21;
-                }
-                v4++;
-            }
-
-            return iFileData;
         }
     }
 }
