@@ -47,11 +47,7 @@ public static class DecryptUnityAsset
     {
         int v4 = 0, v8, v11, v12, v19;
         byte v21;
-        int[] v7;
-        if (iFileData.Length > 0x270C)
-            v7 = new int[3] { 0x3FB, 0xD99, 0x197C };
-        else
-            v7 = new int[3] { 0x3FB, 0xC68, 0xD99 };
+        int[] v7 = new int[3] { 0x3FB, 0xD99, 0x197C };
 
         while (true)
         {
