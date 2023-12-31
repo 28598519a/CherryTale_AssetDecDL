@@ -13,7 +13,7 @@ namespace CherryTale_AssetDecDL
         public static string Respath = String.Empty;
         public static int TotalCount = 0;
         public static int glocount = 0;
-        public static string ServerURL = "https://gzco.wbaso.com/patch/files/";
+        public static string ServerURL = "https://vetv.kedunjx.com/patch/files/";
         public static List<string> log = new List<string>();
     }
 }

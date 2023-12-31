@@ -115,7 +115,7 @@ namespace CherryTale_AssetDecDL
                     // Don't use DownloadFileTaskAsync, if 404 it will create a empty file, use DownloadDataTaskAsync instead.
                     byte[] data = await wc.DownloadDataTaskAsync(downPath);
                     if (CheckSign(data))
-                        data = DecryptUnityAsset.ChangeIdx(DecryptUnityAsset.ChangeVersion(data));
+                        data = DecryptUnityAsset.ChangeVersion(DecryptUnityAsset.ChangeIdx(data));
                     File.WriteAllBytes(savePath, data);
                     
                 }
