@@ -10,7 +10,7 @@ public static class DecryptUnityAsset
         byte[] verion = { 0x32, 0x30, 0x32, 0x30, 0x2E, 0x33, 0x2E, 0x34, 0x31, 0x66, 0x31 };
 
         long data_size = data.Length;
-        int datahead_size = 0x800;
+        int datahead_size = 0x1000;
         byte[] datahead = new byte[datahead_size];
         Array.Copy(data, datahead, datahead_size);
 
